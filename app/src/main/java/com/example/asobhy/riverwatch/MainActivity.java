@@ -39,12 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         cityName ="";
 
-        cityList = new String[]{"GRAND FALLS DISCHARGE",
-                "AROOSTOCK",
-                "TOBIQUE",
-                "BEECHWOOD",
-                "MACTAQUAC",
-                "MCKINLEY",
+        cityList = new String[]{
                 "ST. LEONARD",
                 "PERTH ANDOVER",
                 "SIMONDS",
@@ -116,13 +111,32 @@ public class MainActivity extends AppCompatActivity {
     public String extractNStore(String websiteSrc , String city ){
 
         String riverLevel="";
-        // extract the links to the images we need only
-        Pattern p = Pattern.compile(city + "\t</TD><TD ALIGN=center VALIGN=bottom NOWRAP><FONT SIZE=-1>\tW/L\t</TD><TD ALIGN=center VALIGN=bottom NOWRAP><FONT SIZE=-1>\t(.*?)</TD>");
+        String locationDataUnfiltered="";
+        ArrayList<String> locationDataNumbers = new ArrayList<String>();
+
+        // extract the line that contains the data of location we need
+        Pattern p = Pattern.compile(city + "\t</TD><TD ALIGN=center VALIGN=bottom NOWRAP><FONT SIZE=-1>\tW/L\t</TD><TD ALIGN=center VALIGN=bottom NOWRAP><FONT SIZE=-1>\t(.*?)</TR>");
         Matcher m = p.matcher(websiteSrc);
 
         while(m.find()){
-            riverLevel= m.group(1);
+            locationDataUnfiltered= m.group(1);
         }
+
+        // extracts the data from the line we extracted from the website's source
+        Pattern p1 = Pattern.compile("-?\\d+(,\\d+)*?\\.?\\d+?");
+        Matcher m1 = p1.matcher(locationDataUnfiltered);
+
+        while(m1.find()){
+
+            locationDataNumbers.add(m1.group());
+
+        }
+
+        // overflow level is at index 0
+        // current level is at index 1
+        // 1+ day forcast is at index 2
+        // 2+ day forcast is at index 3
+        riverLevel = locationDataNumbers.get(1);
 
         return riverLevel;
 

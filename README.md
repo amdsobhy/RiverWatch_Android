@@ -13,8 +13,8 @@ Things to be added in the future:
 
 - add code documentation
 - add option to provide water level according to the closest location to user.
-- add a more discriptive warning sign to indicate if river level is in safe levels or not so that users would know when to return to their homes.
-  ** I am displaying the river level in meters because I don't know at what hight the river is too high or too low so I need someone to give me this information so that I can implement it in the app.
+- add a more discriptive warning sign to indicate if river is in safe levels or not so that users would know when to return to their homes.
+
   
  
  
