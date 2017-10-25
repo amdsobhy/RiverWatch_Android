@@ -6,17 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.asobhy.riverwatch.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/background3" />
-
     <EditText
-        android:id="@+id/cityEditText"
+        android:id="@+id/stationEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -26,8 +17,8 @@
         android:hint="Enter Your Location"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        android:textColor="@android:color/background_light"
-        android:textColorHint="@android:color/background_light"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -39,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="68dp"
         android:textAlignment="textStart"
-        android:textColor="@android:color/background_light"
+        android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -47,7 +38,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cityEditText"
+        android:layout_below="@+id/stationEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
         android:onClick="getRiverLevel"
@@ -57,13 +48,13 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp"
         android:text="CIVIC TECH FREDERICTON"
-        android:textColor="@android:color/background_light"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
