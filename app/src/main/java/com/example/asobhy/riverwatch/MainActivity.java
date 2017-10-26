@@ -1,82 +1,106 @@
 package com.example.asobhy.riverwatch;
 
-import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     String stationName;
-    EditText stationEditText;
-    TextView rLevelTextView;
+    ListView stationListView;
+    ArrayList<String> date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rLevelTextView = (TextView) findViewById(R.id.RiverLevelTextView);
-        stationEditText = (EditText) findViewById(R.id.stationEditText);
-        stationName = "";
+        stationListView = (ListView) findViewById(R.id.stationListView);
 
-    }
-
-
-    public void getRiverLevel(View view) {
-
+        // download website xml contents to strings
         String stringXML = Downloader.downloadWebPageSrc("http://www.gnb.ca/nosearch/0911/flood/alert.xml");
+        String stringAlertXML = Downloader.downloadWebPageSrc("http://www.gnb.ca/nosearch/0911/flood/alertlevels.xml");
 
-        // hide keypad
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(stationEditText.getWindowToken(), 0);
+        List<StationRiverForecast> stationRiverForecasts = null;
+        List<StationRiverAlerts> stationRiverAlertsList = null;
 
-        String rLevel = "";
-
-        stationName = stationEditText.getText().toString();
-        stationName = stationName.toLowerCase();
-
-        List<StationRiverForcast> stationRiverForcasts = null;
-
-
+        // parse xml levels
         InputStream is = null;
+
         try {
 
-            XMLPullParserHandler parser = new XMLPullParserHandler();
+            XMLPullParserHandler Parser = new XMLPullParserHandler();
             is = new ByteArrayInputStream(stringXML.getBytes("UTF-8"));
-            stationRiverForcasts = parser.parse(is);
+            stationRiverForecasts = Parser.parse(is);
+            date = Parser.getDate();
 
         } catch (UnsupportedEncodingException e) {
+
             e.printStackTrace();
+
         }
 
-        int index = -1;
 
-        for(int i=0; i<stationRiverForcasts.size(); i++){
+        // parse alerts levels xml
+        InputStream inputStream = null;
 
-            if( stationName.equals(stationRiverForcasts.get(i).getstationName().toLowerCase())){
-                index = i;
-                break;
+        try {
+
+            XMLAlertsPullParserHandler alertParser = new XMLAlertsPullParserHandler();
+            inputStream = new ByteArrayInputStream(stringAlertXML.getBytes("UTF-8"));
+            stationRiverAlertsList = alertParser.parse(inputStream);
+
+
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+
+        }
+
+        Log.i("test", Float.toString(stationRiverAlertsList.get(0).getAdvisory()));
+        Log.i("test", Float.toString(stationRiverForecasts.get(0).getForecast_cur()));
+
+        // extract station names into a separate arraylist to use it later to be displayed
+        // on the ListView
+        ArrayList<String> stationsNames = new ArrayList<>();
+
+        for(int i=0; i<stationRiverForecasts.size(); i++){
+
+            stationsNames.add(stationRiverForecasts.get(i).getStationName());
+
+        }
+
+        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, R.layout.center, R.id.text1, stationsNames);
+        stationListView.setAdapter(ad);
+
+        final List<StationRiverForecast> finalStationRiverForecasts = stationRiverForecasts;
+        final List<StationRiverAlerts> finalStationRiverAlertsList = stationRiverAlertsList;
+        stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent stationDataIntent = new Intent(getApplicationContext(),StationDataActivity.class);
+
+                stationDataIntent.putExtra("StationObject", finalStationRiverForecasts.get(i).getStationObj() );
+                stationDataIntent.putExtra("date", date );
+                stationDataIntent.putExtra("stationAlerts", finalStationRiverAlertsList.get(i).getStationObj());
+
+                startActivity(stationDataIntent);
+
             }
-
-        }
-
-        if(index != -1) {
-            rLevelTextView.setText(stationRiverForcasts.get(index).toString());
-        } else {
-            // error msg if location is not in the list
-            Toast.makeText(getApplicationContext(),"Station not found", Toast.LENGTH_SHORT).show();
-        }
+        });
 
     }
-    
+
 }

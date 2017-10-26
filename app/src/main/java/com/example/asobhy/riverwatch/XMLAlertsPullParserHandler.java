@@ -10,25 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ahmed on 10/25/2017.
+ * Created by ahmed on 10/26/2017.
  */
 
-public class XMLPullParserHandler {
+public class XMLAlertsPullParserHandler {
 
-    private List<StationRiverForecast> stationRiverForecasts = new ArrayList<StationRiverForecast>();
-    private StationRiverForecast stationRiverForecast;
+    private List<StationRiverAlerts> stationRiverAlertsList = new ArrayList<StationRiverAlerts>();
+    private StationRiverAlerts stationRiverAlerts;
     private String text;
     private ArrayList<String> date;
 
-    public List<StationRiverForecast> getStationRiverForecasts() {
-        return stationRiverForecasts;
+    public List<StationRiverAlerts> getStationRiverAlertss() {
+        return stationRiverAlertsList;
     }
 
     public ArrayList<String> getDate(){
         return date;
     }
 
-    public List<StationRiverForecast> parse(InputStream is) {
+    public List<StationRiverAlerts> parse(InputStream is) {
 
         date = new ArrayList<String>();
 
@@ -46,8 +46,8 @@ public class XMLPullParserHandler {
                 switch (eventType) {
                     case XmlPullParser.START_TAG:
                         if (tagname.equalsIgnoreCase("station")) {
-                            // create a new instance of stationRiverForecast
-                            stationRiverForecast = new StationRiverForecast();
+                            // create a new instance of stationRiverAlerts
+                            stationRiverAlerts = new StationRiverAlerts();
                         }
                         break;
 
@@ -57,24 +57,20 @@ public class XMLPullParserHandler {
 
                     case XmlPullParser.END_TAG:
                         if (tagname.equalsIgnoreCase("station")) {
-                            // add stationRiverForecast object to list
-                            stationRiverForecasts.add(stationRiverForecast);
+                            // add stationRiverAlerts object to list
+                            stationRiverAlertsList.add(stationRiverAlerts);
                         }else if (tagname.equalsIgnoreCase("stationID")) {
-                            stationRiverForecast.setStationID(Integer.parseInt(text));
+                            stationRiverAlerts.setStationID(Integer.parseInt(text));
                         }  else if (tagname.equalsIgnoreCase("name")) {
-                            stationRiverForecast.setStationName(text);
-                        } else if (tagname.equalsIgnoreCase("forecast_cur")) {
-                            stationRiverForecast.setForecast_cur(Float.parseFloat(text));
-                        } else if (tagname.equalsIgnoreCase("forecast_24")) {
-                            stationRiverForecast.setForecast_24(Float.parseFloat(text));
-                        } else if (tagname.equalsIgnoreCase("forecast_48")) {
-                            stationRiverForecast.setForecast_48(Float.parseFloat(text));
-                        } else if (tagname.equalsIgnoreCase("dates_in")) {
-                            date.add(text);
-                        } else if (tagname.equalsIgnoreCase("dates_24")) {
-                            date.add(text);
-                        } else if (tagname.equalsIgnoreCase("dates_48")) {
-                            date.add(text);
+                            stationRiverAlerts.setStationName(text);
+                        } else if (tagname.equalsIgnoreCase("advisory")) {
+                            stationRiverAlerts.setAdvisory(Float.parseFloat(text));
+                        } else if (tagname.equalsIgnoreCase("watch")) {
+                            stationRiverAlerts.setWatch(Float.parseFloat(text));
+                        } else if (tagname.equalsIgnoreCase("warning")) {
+                            stationRiverAlerts.setWarning(Float.parseFloat(text));
+                        } else if (tagname.equalsIgnoreCase("Floodlvl")) {
+                            stationRiverAlerts.setFloodLvl(Float.parseFloat(text));
                         }
                         break;
 
@@ -90,7 +86,7 @@ public class XMLPullParserHandler {
             e.printStackTrace();
         }
 
-        return stationRiverForecasts;
+        return stationRiverAlertsList;
 
     }
 
