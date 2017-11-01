@@ -26,8 +26,11 @@ public class StationDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_station_data);
 
         Intent in = getIntent();
+
+        // Store data passed from main activity
         StationRiverForecast selectedStation = (StationRiverForecast) in.getSerializableExtra("StationObject");
         StationRiverAlerts selectedAlerts = (StationRiverAlerts) in.getSerializableExtra("stationAlerts");
+        AlertColorCode selectedStationColorCode = (AlertColorCode) in.getSerializableExtra("colorCode");
         ArrayList<String> date = (ArrayList<String>) in.getSerializableExtra("date");
 
         Log.i("test", Float.toString(selectedAlerts.getAdvisory()));
@@ -65,7 +68,6 @@ public class StationDataActivity extends AppCompatActivity {
         StationGraph graph = new StationGraph(fullDate, forecastArray, alertLvlArray, gView);
 
         graph.plot();
-
 
     }
 

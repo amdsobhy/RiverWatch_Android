@@ -98,7 +98,7 @@ public class StationGraph {
         graph.addSeries(series4);
 
 
-        Log.i("asd", Float.toString(yAlertLvl.get(3)));
+        Log.i("watch", Float.toString(yAlertLvl.get(1)));
 
         // set date label formatter
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(graph.getContext()));

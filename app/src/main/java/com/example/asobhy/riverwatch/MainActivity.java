@@ -1,10 +1,12 @@
 package com.example.asobhy.riverwatch;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     String stationName;
     ListView stationListView;
     ArrayList<String> date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        Log.i("test", Float.toString(stationRiverAlertsList.get(0).getAdvisory()));
-        Log.i("test", Float.toString(stationRiverForecasts.get(0).getForecast_cur()));
-
         // extract station names into a separate arraylist to use it later to be displayed
         // on the ListView
         ArrayList<String> stationsNames = new ArrayList<>();
@@ -81,20 +81,52 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, R.layout.center, R.id.text1, stationsNames);
-        stationListView.setAdapter(ad);
-
         final List<StationRiverForecast> finalStationRiverForecasts = stationRiverForecasts;
         final List<StationRiverAlerts> finalStationRiverAlertsList = stationRiverAlertsList;
+        final List<AlertColorCode> colorCodes = new ArrayList<>();
+
+        for(int i=0; i<stationRiverAlertsList.size(); i++){
+
+            AlertColorCode colorCode = new AlertColorCode(finalStationRiverAlertsList.get(i), finalStationRiverForecasts.get(i));
+            colorCodes.add(colorCode);
+
+        }
+
+
+        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, R.layout.center, R.id.text1, stationsNames){
+
+            // the following code will iterate through rows and set the background color according to
+            // alert level color codes
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+
+                // Set a background color for ListView regular row/item
+                view.setBackgroundColor(colorCodes.get(position).getColor_cur());
+
+                return view;
+
+            }
+
+        };
+
+        stationListView.setAdapter(ad);
+
+
         stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent stationDataIntent = new Intent(getApplicationContext(),StationDataActivity.class);
 
-                stationDataIntent.putExtra("StationObject", finalStationRiverForecasts.get(i).getStationObj() );
+                // data to be passed to StationDataActivity class
+                stationDataIntent.putExtra("StationObject", finalStationRiverForecasts.get(i) );
                 stationDataIntent.putExtra("date", date );
-                stationDataIntent.putExtra("stationAlerts", finalStationRiverAlertsList.get(i).getStationObj());
+                stationDataIntent.putExtra("stationAlerts", finalStationRiverAlertsList.get(i) );
+                stationDataIntent.putExtra("colorCodes", colorCodes.get(i) );
 
                 startActivity(stationDataIntent);
 
@@ -102,5 +134,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
 }

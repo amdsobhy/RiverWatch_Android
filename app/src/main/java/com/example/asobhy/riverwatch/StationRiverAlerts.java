@@ -16,12 +16,19 @@ public class StationRiverAlerts implements Serializable{
     private float warning;
     private float floodLvl;
 
-    public StationRiverAlerts getStationObj(){
 
-        return this;
+/*    // constructor
+    public StationRiverAlerts(StationRiverAlerts x){
+
+        this.setAdvisory(x.getAdvisory());
+        this.setWatch(x.getWatch());
+        this.setFloodLvl(x.getFloodLvl());
+        this.setWarning(x.getWarning());
+        this.setStationID(x.getStationID());
+        this.setStationName(x.getStationName());
 
     }
-
+*/
 
     public String getStationName(){
         return stationName;

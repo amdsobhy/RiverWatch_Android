@@ -16,12 +16,17 @@ public class StationRiverForecast implements Serializable{
     private float forecast_24;
     private float forecast_48;
 
+/*
+    public StationRiverForecast( StationRiverForecast x ){
 
-    public StationRiverForecast getStationObj(){
-
-        return this;
+        this.setForecast_cur(x.getForecast_cur());
+        this.setForecast_24(x.getForecast_24());
+        this.setForecast_48(x.getForecast_48());
+        this.setStationID(x.getStationID());
+        this.setStationName(x.getStationName());
 
     }
+*/
 
     public int getStationID(){
         return stationID;
