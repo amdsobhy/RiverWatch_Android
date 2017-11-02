@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="8dp"
         android:text="CIVIC TECH FREDERICTON"
         android:textColor="@android:color/black"
         android:textSize="18sp"
@@ -20,12 +20,18 @@
 
     <ListView
         android:id="@+id/stationListView"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_below="@+id/DateTextView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/DateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="13dp"
-        android:gravity="center" />
+        android:text="TextView" />
 
 </RelativeLayout>

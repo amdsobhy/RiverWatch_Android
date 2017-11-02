@@ -2,6 +2,9 @@ package com.example.asobhy.riverwatch;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.icu.util.Calendar;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> date;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,28 +98,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        ArrayAdapter<String> ad = new ArrayAdapter<String>(this, R.layout.center, R.id.text1, stationsNames){
-
-            // the following code will iterate through rows and set the background color according to
-            // alert level color codes
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-
-                // Get the current item from ListView
-                View view = super.getView(position,convertView,parent);
-
-                // Set a background color for ListView regular row/item
-                view.setBackgroundColor(colorCodes.get(position).getColor_cur());
-
-                return view;
-
-            }
-
+        Integer[] imageId = {
+                R.drawable.green,
+                R.drawable.yellow,
+                R.drawable.orange,
+                R.drawable.red
         };
 
-        stationListView.setAdapter(ad);
+        CustomList adapter = new CustomList(MainActivity.this, stationsNames, colorCodes, imageId);
+        stationListView=(ListView)findViewById(R.id.stationListView);
 
+        stationListView.setAdapter(adapter);
 
         stationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -132,6 +126,37 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        TextView dateTV = (TextView) findViewById(R.id.DateTextView);
+
+        dateTV.setText( "Last Update: " + appendYrToDate(date).get(0) );
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public ArrayList<String> appendYrToDate(ArrayList<String> dateWithoutYr){
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+
+        // adjust year if data is old and date of view is in new year
+        if( month < 3 ){
+            year--;
+        }
+        // convert year to string then add it to date
+        String stringYear = Integer.toString(year);
+
+        ArrayList<String> fullDate = new ArrayList<>();
+
+        for(int i=0; i<dateWithoutYr.size(); i++){
+
+            fullDate.add(i, dateWithoutYr.get(i) + " " + stringYear );
+            Log.i("date", fullDate.get(i));
+
+        }
+
+        return fullDate;
 
     }
 
